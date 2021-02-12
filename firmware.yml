@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  gather_facts: False
+  vars_prompt:
+  - name: ip_addr
+    prompt: Please enter the switch name
+    private: no
+
+  - name: username
+    prompt: Enter the user name
+    private: no
+
+  - name: password
+    prompt: Enter the password
+    private: yes
+ 
+  tasks:
+  - name: run fos commands
+    brocade_fos_command:
+      switch_login: "{{ username }}"
+      switch_password: "{{ password }}"
+      switch_address: "{{ ip_addr }}"
+      command_set:
+        #
+        - command: firmwareshow
+    register: configout
+    
+  - name: firmwareshow
+    debug:
+      var: configout
